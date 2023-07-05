@@ -9,11 +9,17 @@ boolean doDeepVision = true;
 DeepVision vision;
 Pix2PixNetwork network;
 int dim = 256;
+//String url = "pix2pix001_140_net_G.onnx";
+//String url = "pix2pix002_140_net_G.onnx";
+//String url = "pix2pix003_140_net_G.onnx";
+//String url = "pix2pix004_140_net_G.onnx";
+String url = "contour_pix2pix_195_net_G.onnx";
+//String url = "contour_reverse_pix2pix_140_net_G.onnx";
 
 void modelSetup() {
   vision = new DeepVision(this);
   
-  String url = sketchPath(new File("data", "pix2pix002_140_net_G.onnx").getPath());
+  url = sketchPath(new File("data", url).getPath());
   println("Loading model from " + url);
   Path model = Paths.get(url).toAbsolutePath();
 
