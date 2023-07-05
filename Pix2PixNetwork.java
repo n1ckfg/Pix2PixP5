@@ -40,7 +40,7 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     System.out.println("Input image size: " + frame.size().width() + ", " + frame.size().height());
 
     // convert image into batch of images
-    Mat inputBlob = blobFromImage(frame, 1.0 / 255.0, new Size(256, 256), new Scalar(0, 0, 0, 0), true, false, CV_32F);
+    Mat inputBlob = blobFromImage(frame, 1.0 / 255.0, new Size(dim, dim), new Scalar(0, 0, 0, 0), false, false, CV_32F);
 
     // set input
     net.setInput(inputBlob);
@@ -55,9 +55,13 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     
     // reshape output mat
     // TODO why does this tile the image
-    output = output.reshape(1, 768);
+    output = output.reshape(0, 768);
     System.out.println("Output orig size: " + output.size(4) + ", " +  + output.size(3) + ", " + output.size(2) + ", " + output.size(1) + ", " + output.size(0));
-
+    
+    //output = multiply(output, 0.5).asMat();
+    //output = add(output, new Scalar(0.5)).asMat();
+    //output = multiply(output, 255).asMat();
+        
     // resize output instead of PImage to avoid Processing4 problems
     resize(output, output, new Size(dim, dim));
     System.out.println("Output resized: " + output.size(1) + ", " +  + output.size(0));
@@ -65,6 +69,8 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     // todo: result a depth frame instead of a color image!
     PImage result = new PImage(dim, dim);
     matToImage(output, result);
+    //CvProcessingUtils.toPImage(output, result);
+    
     result = result.get(0, 0, result.width, result.height/3);
     result.resize(dim, dim);
     return new ImageResult(result);
@@ -87,7 +93,7 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
       double beta = -1.0 * minScaled * 255.0;
       System.out.println("alpha: " + alpha + ", beta: " + beta);
       
-      mat.convertTo(mat, CV_8U, alpha, beta);
+      mat.convertTo(mat, CV_8UC3, alpha, beta);
       CvProcessingUtils.toPImage(mat, img);
   }
 
