@@ -40,7 +40,7 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     System.out.println("Input image size: " + frame.size().width() + ", " + frame.size().height());
 
     // convert image into batch of images
-    Mat inputBlob = blobFromImage(frame, 1.0 / 255.0, new Size(256, 256), new Scalar(0, 0, 0, 0), false, false, CV_32F);
+    Mat inputBlob = blobFromImage(frame, 1.0 / 255.0, new Size(256, 256), new Scalar(0, 0, 0, 0), true, false, CV_32F);
 
     // set input
     net.setInput(inputBlob);
@@ -55,7 +55,7 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     
     // reshape output mat
     // TODO why does this tile the image
-    output = output.reshape(0, 768);
+    output = output.reshape(1, 768);
     System.out.println("Output orig size: " + output.size(4) + ", " +  + output.size(3) + ", " + output.size(2) + ", " + output.size(1) + ", " + output.size(0));
 
     // resize output instead of PImage to avoid Processing4 problems

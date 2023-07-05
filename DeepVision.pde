@@ -13,8 +13,8 @@ int dim = 256;
 //String url = "pix2pix002_140_net_G.onnx";
 //String url = "pix2pix003_140_net_G.onnx";
 //String url = "pix2pix004_140_net_G.onnx";
-String url = "contour_pix2pix_195_net_G.onnx";
-//String url = "contour_reverse_pix2pix_140_net_G.onnx";
+//String url = "contour_pix2pix_195_net_G.onnx";
+String url = "contour_reverse_pix2pix_195_net_G.onnx";
 
 void modelSetup() {
   vision = new DeepVision(this);
