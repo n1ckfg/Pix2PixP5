@@ -8,7 +8,7 @@ import java.nio.file.Path;
 boolean doDeepVision = true;
 DeepVision vision;
 Pix2PixNetwork network;
-int dim = 256;
+
 //String url = "pix2pix001_140_net_G.onnx";
 //String url = "pix2pix002_140_net_G.onnx";
 //String url = "pix2pix003_140_net_G.onnx";
