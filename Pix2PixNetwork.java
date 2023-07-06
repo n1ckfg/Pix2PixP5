@@ -54,32 +54,22 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     Mat output = outs.get(0);
     
     // reshape output mat
-    // TODO why does this tile the image
     System.out.println("Output size raw: " + output.size().width() + ", " + output.size().height());
     output = output.reshape(0, 768);
     System.out.println("Output size reshaped: " + output.size().width() + ", " + output.size().height());
-    
-    //output = multiply(output, 0.5).asMat();
-    //output = add(output, new Scalar(0.5)).asMat();
-    //output = multiply(output, 255).asMat();
-        
-    // resize output instead of PImage to avoid Processing4 problems
-    //resize(output, output, new Size(dim, dim));
-
-    // todo: result a depth frame instead of a color image!
+           
     PImage result = new PImage(dim, dim*3);
     matToImage(output, result);
-    ///CvProcessingUtils.toPImage(output, result);
     
-    PImage returns = new PImage(dim, dim);
-    returns.loadPixels();
     PImage redChannel = result.get(0, 0, 256, 256);
     redChannel.loadPixels();
     PImage greenChannel = result.get(0, 256, 256, 256);
     greenChannel.loadPixels();
     PImage blueChannel = result.get(0, 512, 256, 256);
     blueChannel.loadPixels();
-    
+
+    PImage returns = new PImage(dim, dim);
+    returns.loadPixels();    
     for (int i=0; i<returns.pixels.length; i++) {
       int r = red(redChannel.pixels[i]);
       int g = green(greenChannel.pixels[i]);
@@ -89,11 +79,22 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     }
     returns.updatePixels();
    
-    //result = result.get(0, 0, result.width, result.height/3);
-    //result.resize(dim, dim);
     return new ImageResult(returns);
   }
+ 
+  private void matToImage(Mat mat, PImage img) {
+    mat = multiply(mat, 0.5).asMat();
+    mat = add(mat, new Scalar(0.5)).asMat();
+    mat = multiply(mat, 255).asMat();
+    
+    mat.convertTo(mat, CV_8U);
+    CvProcessingUtils.toPImage(mat, img);
+  }
 
+  public Net getNet() {
+    return net;
+  }
+  
   private int color(int r, int g, int b, int a) {
     return (a << 24) | (r << 16) | (g << 8) | b;
   }
@@ -114,28 +115,4 @@ public class Pix2PixNetwork extends BaseNeuralNetwork<ImageResult> {
     return (c >> 24) & 0xFF;
   }
   
-  private void matToImage(Mat mat, PImage img) {
-    // find min / max
-    DoublePointer minValuePtr = new DoublePointer(1);
-    DoublePointer maxValuePtr = new DoublePointer(1);
-
-    minMaxLoc(mat, minValuePtr, maxValuePtr, null, null, null);
-
-    double minValue = minValuePtr.get();
-    double maxValue = maxValuePtr.get();
-
-    double distance = maxValue - minValue;
-    double minScaled = minValue / distance;
-
-    double alpha = 1.0 / distance * 255.0;
-    double beta = -1.0 * minScaled * 255.0;
-    System.out.println("alpha: " + alpha + ", beta: " + beta);
-    
-    mat.convertTo(mat, CV_8UC3, alpha, beta);
-    CvProcessingUtils.toPImage(mat, img);
-  }
-
-  public Net getNet() {
-    return net;
-  }
 }
