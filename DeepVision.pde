@@ -5,7 +5,6 @@ import ch.bildspur.vision.dependency.*;
 import java.nio.file.Paths;
 import java.nio.file.Path;
 
-boolean doDeepVision = true;
 DeepVision vision;
 Pix2PixNetwork network;
 
