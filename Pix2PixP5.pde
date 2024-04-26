@@ -1,21 +1,48 @@
+import processing.javafx.*;
+import processing.video.Capture;
+
 PImage img;
 PImage result;
+Capture cam;
+boolean useVideo = true;
 
 void setup() {
-  size(50, 50);
-  img = loadImage("test1.jpg");
-  //img = loadImage("test2.jpg");
-  //img = loadImage("test3.jpg");
-  surface.setSize(img.width*2, img.height*2);
+  size(50, 50, FX2D);
+  //colorMode(HSB, 360, 100, 100);
+  
+  cam = new Capture(this, "pipeline:autovideosrc");
+  cam.start();
+  
+  if (useVideo) {
+    surface.setSize(512, 512);
+  } else {
+    img = loadImage("test1.jpg");
+    //img = loadImage("test2.jpg");
+    //img = loadImage("test3.jpg");
+    surface.setSize(img.width*2, img.height*2);
+  }
   
   modelSetup();
-  result = modelInference(img);
+  
+  if (!useVideo) result = modelInference(img);
 }
 
 void draw() {
-  if (drawResult) {
+  if (useVideo) {
+    if (cam.available()) {
+      cam.read();
+      result = modelInference(cam);
+    } else if (cam.width == 0) {
+      return;
+    }
     image(result, 0, 0, width, height);
   } else {
-    image(img, 0, 0, width, height);
+    if (drawResult) {
+      image(result, 0, 0, width, height);
+    } else {
+      image(img, 0, 0, width, height);
+    }
   }
+
+  surface.setTitle("FPS: " + Math.round(frameRate));
 }

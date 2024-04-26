@@ -1,1 +1,4 @@
 *.onnx
+model.zip
+model.zip.1
+.DS_Store
