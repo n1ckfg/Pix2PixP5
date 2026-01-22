@@ -8,12 +8,16 @@ import java.nio.file.Path;
 DeepVision vision;
 Pix2PixNetwork network;
 
-//String url = "pix2pix001_140_net_G.onnx";
-//String url = "pix2pix002_140_net_G.onnx";
-//String url = "pix2pix003_140_net_G.onnx";
-//String url = "pix2pix004_140_net_G.onnx";
-//String url = "contour_pix2pix_195_net_G.onnx";
-String url = "contour_reverse_pix2pix_195_net_G.onnx";
+String[] urls = {
+  "contour_pix2pix_195_net_G.onnx",
+  "contour_reverse_pix2pix_195_net_G.onnx",
+  "latest_net_G.onnx",
+  "latest_net_G_simplified.onnx",
+  "contour_pix2pix_195_net_G.onnx",
+  "new_pix2pix002_140_net_G_simplified.onnx"
+};
+
+String url = urls[1];
 
 void modelSetup() {
   vision = new DeepVision(this);

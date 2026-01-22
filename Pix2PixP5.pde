@@ -7,12 +7,15 @@ Capture cam;
 boolean useVideo = true;
 
 void setup() {
-  size(50, 50, FX2D);
+  size(640, 480, FX2D);
   //colorMode(HSB, 360, 100, 100);
-  
-  cam = new Capture(this, "pipeline:autovideosrc");
+
+  String[] cameras = Capture.list();
+ 
+  cam = new Capture(this, 640, 480, cameras[1], 30);
   cam.start();
   
+  /*
   if (useVideo) {
     surface.setSize(512, 512);
   } else {
@@ -21,6 +24,7 @@ void setup() {
     //img = loadImage("test3.jpg");
     surface.setSize(img.width*2, img.height*2);
   }
+  */
   
   modelSetup();
   
