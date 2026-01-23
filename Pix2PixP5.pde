@@ -3,17 +3,13 @@ import processing.video.Capture;
 
 PImage img;
 PImage result;
-Capture cam;
 boolean useVideo = true;
 
 void setup() {
   size(640, 480, FX2D);
-  //colorMode(HSB, 360, 100, 100);
+  colorMode(HSB, 360, 100, 100);
 
-  String[] cameras = Capture.list();
- 
-  cam = new Capture(this, 640, 480, cameras[1], 30);
-  cam.start();
+  captureSetup(0);
   
   /*
   if (useVideo) {
